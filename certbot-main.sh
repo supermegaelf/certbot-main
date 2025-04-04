@@ -1,9 +1,9 @@
 #!/bin/bash
 
-read -p "Enter your Cloudflare email: " CF_EMAIL
-read -p "Enter your Cloudflare API key: " CF_API_KEY
-read -p "Enter domain for Dashboard (e.g., panel.example.com): " DASHBOARD_DOMAIN
-read -p "Enter domain for Subscription (e.g., sub.example.com): " SUB_DOMAIN
+read -p "Cloudflare email: " CF_EMAIL
+read -p "Cloudflare API key: " CF_API_KEY
+read -p "Marzban Dashboard: " DASHBOARD_DOMAIN
+read -p "Sub-Site domain: " SUB_DOMAIN
 
 apt install python3-certbot-dns-cloudflare -y
 mkdir -p /root/.secrets/certbot/
