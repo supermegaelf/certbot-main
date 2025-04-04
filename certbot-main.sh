@@ -27,6 +27,3 @@ certbot certonly --dns-cloudflare \
   --non-interactive --agree-tos --email "$CF_EMAIL"
 
 echo "0 3 * * * root /usr/bin/certbot renew --quiet --dns-cloudflare --dns-cloudflare-credentials /root/.secrets/certbot/cloudflare.ini --post-hook 'systemctl reload nginx'" | tee -a /etc/crontab
-
-echo "Script completed successfully!"
-echo "Certificates for *.$DASHBOARD_DOMAIN and *.$SUB_DOMAIN have been created"
