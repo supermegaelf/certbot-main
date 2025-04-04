@@ -1,12 +1,12 @@
 #!/bin/bash
 
+read -p "Enter your Cloudflare email: " CF_EMAIL
+read -p "Enter your Cloudflare API key: " CF_API_KEY
+read -p "Enter domain for Dashboard (e.g., panel.example.com): " DASHBOARD_DOMAIN
+read -p "Enter domain for Subscription (e.g., sub.example.com): " SUB_DOMAIN
+
 apt install python3-certbot-dns-cloudflare -y
 mkdir -p /root/.secrets/certbot/
-
-read -p "Cloudflare email: " CF_EMAIL
-read -p "Cloudflare API key: " CF_API_KEY
-read -p "Marzban Dashboard: " DASHBOARD_DOMAIN
-read -p "Sub-Site domain: " SUB_DOMAIN
 
 cat > /root/.secrets/certbot/cloudflare.ini << EOF
 dns_cloudflare_email = "$CF_EMAIL"
@@ -19,11 +19,14 @@ chmod 400 /root/.secrets/certbot/cloudflare.ini
 certbot certonly --dns-cloudflare \
   --dns-cloudflare-credentials /root/.secrets/certbot/cloudflare.ini \
   -d "*.$DASHBOARD_DOMAIN" -d "$DASHBOARD_DOMAIN" \
-  --non-interactive --agree-tos
+  --non-interactive --agree-tos --email "$CF_EMAIL"
 
 certbot certonly --dns-cloudflare \
   --dns-cloudflare-credentials /root/.secrets/certbot/cloudflare.ini \
   -d "*.$SUB_DOMAIN" -d "$SUB_DOMAIN" \
-  --non-interactive --agree-tos
+  --non-interactive --agree-tos --email "$CF_EMAIL"
 
 echo "0 3 * * * root /usr/bin/certbot renew --quiet --dns-cloudflare --dns-cloudflare-credentials /root/.secrets/certbot/cloudflare.ini --post-hook 'systemctl reload nginx'" | tee -a /etc/crontab
+
+echo "Script completed successfully!"
+echo "Certificates for *.$DASHBOARD_DOMAIN and *.$SUB_DOMAIN have been created"
