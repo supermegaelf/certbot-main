@@ -1,9 +1,9 @@
 #!/bin/bash
 
-read -p "Cloudflare email: " CF_EMAIL
-read -p "Cloudflare API key: " CF_API_KEY
-read -p "Marzban Dashboard: " DASHBOARD_DOMAIN
-read -p "Sub-Site domain: " SUB_DOMAIN
+read -p $'\033[32mCloudflare email: \033[0m' CF_EMAIL
+read -p $'\033[32mCloudflare API key: \033[0m' CF_API_KEY
+read -p $'\033[32mMarzban Dashboard: \033[0m' DASHBOARD_DOMAIN
+read -p $'\033[32mSub-Site domain: \033[0m' SUB_DOMAIN
 
 apt install python3-certbot-dns-cloudflare -y
 mkdir -p /root/.secrets/certbot/
@@ -23,6 +23,7 @@ certbot certonly --dns-cloudflare \
 
 certbot certonly --dns-cloudflare \
   --dns-cloudflare-credentials /root/.secrets/certbot/cloudflare.ini \
+  --dns-cloudflare-propagation-seconds 20 \
   -d "*.$SUB_DOMAIN" -d "$SUB_DOMAIN" \
   --non-interactive --agree-tos --email "$CF_EMAIL"
 
